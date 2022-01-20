@@ -864,6 +864,9 @@ Definition classify_shift (ty1: type) (ty2: type) :=
   | _,_  => shift_default
   end.
 
+Definition sem_mask_int (v : int) : int := Int.and v (Int.repr 31).
+Definition sem_mask_lng (v : int64) : int64 := Int64.and v (Int64.repr 63).
+
 Definition sem_shift
     (sem_int: signedness -> int -> int -> int)
     (sem_long: signedness -> int64 -> int64 -> int64)
