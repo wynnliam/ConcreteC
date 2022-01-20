@@ -874,30 +874,22 @@ Definition sem_shift
   match classify_shift t1 t2 with
   | shift_case_ii sg =>
       match v1, v2 with
-      | Vint n1, Vint n2 =>
-          if Int.ltu n2 Int.iwordsize
-          then Some(Vint(sem_int sg n1 n2)) else None
+      | Vint n1, Vint n2 => Some(Vint(sem_int sg n1 (sem_mask_int n2)))
       | _, _ => None
       end
   | shift_case_il sg =>
       match v1, v2 with
-      | Vint n1, Vlong n2 =>
-          if Int64.ltu n2 (Int64.repr 32)
-          then Some(Vint(sem_int sg n1 (Int64.loword n2))) else None
+      | Vint n1, Vlong n2 => Some(Vint(sem_int sg n1 (sem_mask_int (Int64.loword n2))))
       | _, _ => None
       end
   | shift_case_li sg =>
       match v1, v2 with
-      | Vlong n1, Vint n2 =>
-          if Int.ltu n2 Int64.iwordsize'
-          then Some(Vlong(sem_long sg n1 (Int64.repr (Int.unsigned n2)))) else None
+      | Vlong n1, Vint n2 => Some(Vlong(sem_long sg n1 (sem_mask_lng (Int64.repr (Int.unsigned n2)))))
       | _, _ => None
       end
   | shift_case_ll sg =>
       match v1, v2 with
-      | Vlong n1, Vlong n2 =>
-          if Int64.ltu n2 Int64.iwordsize
-          then Some(Vlong(sem_long sg n1 n2)) else None
+      | Vlong n1, Vlong n2 => Some(Vlong(sem_long sg n1 (sem_mask_lng n2)))
       | _, _ => None
       end
   | shift_default => None
