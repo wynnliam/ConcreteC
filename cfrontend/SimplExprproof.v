@@ -159,13 +159,17 @@ Proof.
   set (amount := Int.repr (Int.zwordsize - width)).
   assert (LT: Int.ltu amount Int.iwordsize = true).
   { unfold Int.ltu. rewrite Int.unsigned_repr_wordsize. apply zlt_true.
-    unfold amount; rewrite Int.unsigned_repr. lia.
+    unfold amount. rewrite Int.unsigned_repr. lia.
     assert (Int.zwordsize < Int.max_unsigned) by reflexivity. lia. }
   econstructor.
   econstructor. eauto. econstructor.
-  rewrite H1. unfold sem_binary_operation, sem_shl, sem_shift. rewrite LT. destruct sz, sg1; reflexivity.
+  rewrite H1. unfold sem_binary_operation, sem_shl, sem_shift. destruct sz, sg1; reflexivity.
   econstructor.
-  unfold sem_binary_operation, sem_shr, sem_shift. rewrite LT. reflexivity.
+  unfold sem_binary_operation, sem_shr, sem_shift.
+  simpl.
+  assert (SMI: sem_mask_int amount = amount).
+  { apply Cop.sem_mask_ident. apply LT. }
+  rewrite -> SMI. reflexivity.
 Qed.
 
 (** Translation of simple expressions. *)
