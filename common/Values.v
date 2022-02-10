@@ -1272,7 +1272,6 @@ Proof.
 
   assert (Hident : val_shift_int_mask logn = logn).
   { apply mask_size_val_ident. apply Hltu. }
-
   rewrite Hident.
   decEq.
   apply Int.mul_pow2.
@@ -1437,11 +1436,12 @@ Qed.
 
 Theorem shl_mul: forall x y, mul x (shl Vone y) = shl x y.
 Proof.
-  Admitted.
-  (*destruct x; destruct y; simpl; auto.
-  case (Int.ltu i0 Int.iwordsize); auto.
-  decEq. symmetry. apply Int.shl_mul.
-Qed.*)
+  destruct x; destruct y; simpl; auto.
+  remember (val_shift_int_mask i0) as n.
+  case (Int.ltu i0 Int.iwordsize).
+  - auto. decEq. symmetry. apply Int.shl_mul.
+  - auto. decEq. symmetry. apply Int.shl_mul.
+Qed.
 
 Theorem shl_rolm:
   forall x n,
