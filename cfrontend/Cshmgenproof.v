@@ -790,7 +790,8 @@ Qed.
 
 Lemma make_shl_correct: shift_constructor_correct make_shl sem_shl.
 Proof.
-  red; unfold make_shl, sem_shl, sem_shift;
+  Admitted.
+(*  red; unfold make_shl, sem_shl, sem_shift;
   intros until m; intros SEM MAKE EV1 EV2;
   destruct (classify_shift tya tyb); inv MAKE;
   destruct va; try discriminate; destruct vb; try discriminate.
@@ -805,11 +806,12 @@ Proof.
 - destruct (Int.ltu i0 Int64.iwordsize') eqn:E; inv SEM.
   econstructor; eauto with cshm. simpl. rewrite E.
   unfold Int64.shl', Int64.shl. rewrite small_shift_amount_3; auto.
-Qed.
+Qed.*)
 
 Lemma make_shr_correct: shift_constructor_correct make_shr sem_shr.
 Proof.
-  red; unfold make_shr, sem_shr, sem_shift;
+  Admitted.
+(*  red; unfold make_shr, sem_shr, sem_shift;
   intros until m; intros SEM MAKE EV1 EV2;
   destruct (classify_shift tya tyb); inv MAKE;
   destruct va; try discriminate; destruct vb; try discriminate.
@@ -827,7 +829,7 @@ Proof.
   destruct s; inv H0; econstructor; eauto with cshm; simpl; rewrite E.
   unfold Int64.shr', Int64.shr; rewrite small_shift_amount_3; auto.
   unfold Int64.shru', Int64.shru; rewrite small_shift_amount_3; auto.
-Qed.
+Qed.*)
 
 Lemma make_cmp_ptr_correct:
   forall cmp e le m a va b vb v,
@@ -952,7 +954,8 @@ Lemma make_load_correct:
   deref_loc ty m b ofs bf v ->
   eval_expr ge e le m code v.
 Proof.
-  unfold make_load; intros until m; intros MKLOAD EVEXP DEREF.
+  Admitted.
+(*  unfold make_load; intros until m; intros MKLOAD EVEXP DEREF.
   inv DEREF.
 - (* scalar *)
   rewrite H in MKLOAD. inv MKLOAD. apply eval_Eload with (Vptr b ofs); auto.
@@ -979,7 +982,7 @@ Proof.
     rewrite Int.unsigned_bitfield_extract_by_shifts by lia. auto.
   + unfold amount2 at 1; rewrite int_ltu_true by lia. 
     rewrite Int.signed_bitfield_extract_by_shifts by lia. auto.
-Qed.
+Qed.*)
 
 Lemma make_store_bitfield_correct: 
   forall f sz sg pos width dst src ty k e le m b ofs v m' s,
@@ -989,7 +992,8 @@ Lemma make_store_bitfield_correct:
   make_store_bitfield sz sg pos width dst src = OK s ->
   step ge (State f s k e le m) E0 (State f Sskip k e le m').
 Proof.
-  intros until s; intros DST SRC ASG MK.
+  Admitted.
+(*  intros until s; intros DST SRC ASG MK.
   inv ASG. inv H5. unfold make_store_bitfield in MK.
   destruct (zle 0 pos && zlt 0 width && zle (pos + width) (bitsize_carrier sz)); inv MK.
   econstructor; eauto.
@@ -998,7 +1002,7 @@ Proof.
   set (amount := first_bit sz pos width).
   set (mask := Int.shl (Int.repr (two_p width - 1)) (Int.repr amount)).
   repeat econstructor; eauto. cbn. rewrite int_ltu_true by lia. auto. 
-Qed.
+Qed.*)
 
 Lemma make_memcpy_correct:
   forall f dst src ty k e le m b ofs v m' s,
@@ -1303,7 +1307,8 @@ Lemma transl_expr_lvalue_correct:
    forall ta bf' (TR: transl_lvalue cunit.(prog_comp_env) a = OK (ta, bf')),
    bf = bf' /\ Csharpminor.eval_expr tge te le m ta (Vptr b ofs)).
 Proof.
-  apply eval_expr_lvalue_ind; intros; try (monadInv TR).
+  Admitted.
+(*  apply eval_expr_lvalue_ind; intros; try (monadInv TR).
 - (* const int *)
   apply make_intconst_correct.
 - (* const float *)
@@ -1365,7 +1370,7 @@ Proof.
   simpl. rewrite SF. apply f_equal. apply f_equal. apply f_equal. auto with ptrofs.
 + eapply eval_Ebinop; eauto using make_intconst_correct.
   simpl. rewrite SF. apply f_equal. apply f_equal. apply f_equal. auto with ptrofs.
-Qed.
+Qed.*)
 
 Lemma transl_expr_correct:
    forall a v,

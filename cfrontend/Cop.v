@@ -873,7 +873,51 @@ Theorem sem_mask_ident:
   Int.ltu amt Int.iwordsize = true ->
   sem_mask_int amt = amt.
 Proof.
-  Admitted.
+  intros.
+  remember (Int.repr 32) as n.
+  unfold sem_mask_int.
+
+  assert (H32minusOne: Int.sub n Int.one = Int.repr 31).
+  { rewrite Heqn. auto. }
+  rewrite <- H32minusOne.
+
+  Check Int.modu_and. 
+  assert (Hmodu : Int.modu amt n = Int.and amt (Int.sub n Int.one)).
+  { Check Int.modu_and.
+    apply Int.modu_and with (logn:= Int.repr 5).
+    { rewrite Heqn. auto. }
+  }
+
+  rewrite <- Hmodu.
+
+  assert (Hltu : 0 <= (Int.unsigned amt) < Int.unsigned (Int.iwordsize)).
+  { Search Int.ltu.
+    Check Int.ltu_inv.
+    apply Int.ltu_inv.
+    apply H. }
+
+  assert (Hn : Int.iwordsize = n).
+  { rewrite Heqn. auto. }
+
+  unfold Int.modu.
+  assert (Hmodident : Int.unsigned amt mod Int.unsigned n = Int.unsigned amt).
+  { apply Z.mod_small.
+    rewrite <- Hn.
+    apply Hltu. }
+
+  rewrite -> Hmodident.
+  apply Int.repr_unsigned.
+Qed.
+
+  (*assert (Hwordsz32: Int.iwordsize = Int.repr 32).
+  { auto. }
+  assert (Hwordsz64 : Int64.iwordsize = Int64.repr 64).
+  { auto. }
+  assert (Hwordsz64' : Int64.iwordsize' = Int.repr 64).
+  { auto. }
+
+  Compute Int64.iwordsize'.
+  Admitted.*)
 
 
 Definition sem_shift

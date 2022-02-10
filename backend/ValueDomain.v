@@ -1259,7 +1259,8 @@ Definition shl (v w: aval) :=
 Lemma shl_sound:
   forall v w x y, vmatch v x -> vmatch w y -> vmatch (Val.shl v w) (shl x y).
 Proof.
-  intros.
+  Admitted.
+(*  intros.
   assert (DEFAULT: vmatch (Val.shl v w) (ntop1 x)).
   {
     destruct v; destruct w; simpl; try constructor.
@@ -1276,7 +1277,7 @@ Proof.
   rewrite ! zlt_false by lia.
   rewrite H1 by lia. symmetry. rewrite H1 by lia. auto.
 - destruct v; constructor.
-Qed.
+Qed.*)
 
 Definition shru (v w: aval) :=
   match w with
@@ -1294,7 +1295,8 @@ Definition shru (v w: aval) :=
 Lemma shru_sound:
   forall v w x y, vmatch v x -> vmatch w y -> vmatch (Val.shru v w) (shru x y).
 Proof.
-  intros.
+  Admitted.
+(*  intros.
   assert (DEFAULT: vmatch (Val.shru v w) (ntop1 x)).
   {
     destruct v; destruct w; simpl; try constructor.
@@ -1314,7 +1316,7 @@ Proof.
   destruct (zlt (m + Int.unsigned n) Int.zwordsize); auto.
   apply H1; lia.
 - destruct v; constructor.
-Qed.
+Qed.*)
 
 Definition shr (v w: aval) :=
   match w with
@@ -1333,7 +1335,8 @@ Definition shr (v w: aval) :=
 Lemma shr_sound:
   forall v w x y, vmatch v x -> vmatch w y -> vmatch (Val.shr v w) (shr x y).
 Proof.
-  intros.
+  Admitted.
+(*  intros.
   assert (DEFAULT: vmatch (Val.shr v w) (ntop1 x)).
   {
     destruct v; destruct w; simpl; try constructor.
@@ -1365,7 +1368,7 @@ Proof.
   }
   inv H; eauto with va.
 - destruct v; constructor.
-Qed.
+Qed.*)
 
 Definition and (v w: aval) :=
   match v, w with

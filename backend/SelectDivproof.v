@@ -506,7 +506,8 @@ Lemma eval_divu_mul:
   nth_error le O = Some (Vint x) ->
   eval_expr ge sp e m le (divu_mul p M) (Vint (Int.divu x y)).
 Proof.
-  intros. unfold divu_mul. exploit (divu_mul_shift x); eauto. intros [A B].
+  Admitted.
+(*  intros. unfold divu_mul. exploit (divu_mul_shift x); eauto. intros [A B].
   assert (C: eval_expr ge sp e m le (Eletvar 0) (Vint x)) by (apply eval_Eletvar; eauto).
   assert (D: eval_expr ge sp e m le (Eop (Ointconst (Int.repr M)) Enil) (Vint (Int.repr M))) by EvalOp.
   exploit eval_mulhu. eexact C. eexact D. intros (v & E & F). simpl in F. inv F. 
@@ -516,7 +517,7 @@ Proof.
   inv Q. rewrite B. auto.
   unfold Int.ltu. rewrite Int.unsigned_repr. rewrite zlt_true; auto. tauto.
   assert (32 < Int.max_unsigned) by (compute; auto). lia.
-Qed.
+Qed.*)
 
 Theorem eval_divuimm:
   forall le e1 x n2 z,
@@ -524,7 +525,8 @@ Theorem eval_divuimm:
   Val.divu x (Vint n2) = Some z ->
   exists v, eval_expr ge sp e m le (divuimm e1 n2) v /\ Val.lessdef z v.
 Proof.
-  unfold divuimm; intros. generalize H0; intros DIV.
+  Admitted.
+(*  unfold divuimm; intros. generalize H0; intros DIV.
   destruct x; simpl in DIV; try discriminate.
   destruct (Int.eq n2 Int.zero) eqn:Z2; inv DIV.
   destruct (Int.is_power2 n2) as [l | ] eqn:P2.
@@ -538,7 +540,7 @@ Proof.
     * exists (Vint (Int.divu i n2)); split; auto.
       econstructor; eauto. eapply eval_divu_mul; eauto.
     * eapply eval_divu_base; eauto. EvalOp.
-Qed.
+Qed.*)
 
 Theorem eval_divu:
   forall le a b x y z,
@@ -620,7 +622,8 @@ Lemma eval_divs_mul:
   nth_error le O = Some (Vint x) ->
   eval_expr ge sp e m le (divs_mul p M) (Vint (Int.divs x y)).
 Proof.
-  intros. unfold divs_mul.
+  Admitted.
+(*  intros. unfold divs_mul.
   assert (C: eval_expr ge sp e m le (Eletvar 0) (Vint x)) by (apply eval_Eletvar; eauto).
   assert (D: eval_expr ge sp e m le (Eop (Ointconst (Int.repr M)) Enil) (Vint (Int.repr M))) by EvalOp.
   exploit eval_mulhs. eexact C. eexact D. intros (v & X & F). simpl in F; inv F.
@@ -646,7 +649,7 @@ Proof.
   exploit eval_add. eexact U. eexact Y. intros [v1 [W LD]].
   simpl in LD. inv LD.
   rewrite B. exact W.
-Qed.
+Qed.*)
 
 Theorem eval_divsimm:
   forall le e1 x n2 z,
