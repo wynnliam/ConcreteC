@@ -1262,15 +1262,17 @@ Qed.
 Theorem mul_pow2:
   forall x n logn,
   Int.is_power2 n = Some logn ->
-  (*Int.ltu logn Int.iwordsize = true ->*)
   mul x (Vint n) = shl x (Vint logn).
 Proof.
   intros; destruct x; auto.
   simpl.
+
+  assert (Hltu: Int.ltu logn Int.iwordsize = true).
+  { apply Int.is_power2_range with (n := n). apply H. }
+
   assert (Hident : val_shift_int_mask logn = logn).
-  { apply mask_size_val_ident.
-    change (Int.repr 32) with Int.iwordsize.
-    apply H0. }
+  { apply mask_size_val_ident. apply Hltu. }
+
   rewrite Hident.
   decEq.
   apply Int.mul_pow2.
