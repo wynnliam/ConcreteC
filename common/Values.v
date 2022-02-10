@@ -421,9 +421,43 @@ Definition val_shift_int_mask (v : int) : int :=
 
 Theorem mask_size_val_ident:
 forall v : int,
-Int.ltu v (Int.repr 32) = true -> val_shift_int_mask v = v.
+Int.ltu v Int.iwordsize = true -> val_shift_int_mask v = v.
 Proof.
-  Admitted.
+  intros.
+  remember (Int.repr 32) as n.
+  unfold val_shift_int_mask.
+
+  assert (H32minusOne: Int.sub n Int.one = Int.repr 31).
+  { rewrite Heqn. auto. }
+  rewrite <- H32minusOne.
+
+  Check Int.modu_and. 
+  assert (Hmodu : Int.modu v n = Int.and v (Int.sub n Int.one)).
+  { Check Int.modu_and.
+    apply Int.modu_and with (logn:= Int.repr 5).
+    { rewrite Heqn. auto. }
+  }
+
+  rewrite <- Hmodu.
+
+  assert (Hltu : 0 <= (Int.unsigned v) < Int.unsigned (Int.iwordsize)).
+  { Search Int.ltu.
+    Check Int.ltu_inv.
+    apply Int.ltu_inv.
+    apply H. }
+
+  assert (Hn : Int.iwordsize = n).
+  { rewrite Heqn. auto. }
+
+  unfold Int.modu.
+  assert (Hmodident : Int.unsigned v mod Int.unsigned n = Int.unsigned v).
+  { apply Z.mod_small.
+    rewrite <- Hn.
+    apply Hltu. }
+
+  rewrite -> Hmodident.
+  apply Int.repr_unsigned.
+Qed.
 
 Definition shl (v1 v2: val): val :=
   match v1, v2 with
