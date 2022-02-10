@@ -419,6 +419,13 @@ Definition xor (v1 v2: val): val :=
 Definition val_shift_int_mask (v : int) : int :=
   Int.and v (Int.repr 31).
 
+(*Definition shift_int_mask_2 (v : int) (m : int)
+
+Int64.is_pow1
+
+Int.is_pow2 w = Some logn ->
+Int.ltu v w = true -> shift_int_mask v (Int.sub Int.iwordsize (Int.one))*)
+
 Theorem mask_size_val_ident:
 forall v : int,
 Int.ltu v Int.iwordsize = true -> val_shift_int_mask v = v.
@@ -1448,10 +1455,16 @@ Theorem shl_rolm:
   Int.ltu n Int.iwordsize = true ->
   shl x (Vint n) = rolm x n (Int.shl Int.mone n).
 Proof.
-  Admitted.
-  (*intros; destruct x; simpl; auto.
-  rewrite H. decEq. apply Int.shl_rolm. exact H.
-Qed.*)
+  intros; destruct x; simpl; auto.
+  decEq.
+
+  assert (Hident: val_shift_int_mask n = n).
+  { apply mask_size_val_ident. apply H. }
+
+  rewrite Hident.
+  apply Int.shl_rolm.
+  exact H.
+Qed.
 
 Theorem shll_rolml:
   forall x n,
