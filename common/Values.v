@@ -1506,14 +1506,19 @@ Theorem shrx_carry:
   shrx x y = Some z ->
   add (shr x y) (shr_carry x y) = z.
 Proof.
-  Admitted.
-(*  intros. destruct x; destruct y; simpl in H; inv H.
+  intros. destruct x; destruct y; simpl in H; inv H.
   destruct (Int.ltu i0 (Int.repr 31)) eqn:?; inv H1.
   exploit Int.ltu_inv; eauto. change (Int.unsigned (Int.repr 31)) with 31. intros.
   assert (Int.ltu i0 Int.iwordsize = true).
     unfold Int.ltu. apply zlt_true. change (Int.unsigned Int.iwordsize) with 32. lia.
-  simpl. rewrite H0. simpl. decEq. rewrite Int.shrx_carry; auto.
-Qed.*)
+  simpl. rewrite H0. simpl. decEq.
+
+  assert (Hident: val_shift_int_mask i0 = i0).
+  { apply mask_size_val_ident; exact H0. }
+  rewrite Hident.
+
+ rewrite Int.shrx_carry; auto.
+Qed.
 
 Theorem shrx_shr:
   forall x y z,
