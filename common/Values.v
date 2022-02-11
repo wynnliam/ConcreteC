@@ -1482,10 +1482,12 @@ Theorem shru_rolm:
   Int.ltu n Int.iwordsize = true ->
   shru x (Vint n) = rolm x (Int.sub Int.iwordsize n) (Int.shru Int.mone n).
 Proof.
-  Admitted.
-(*  intros; destruct x; simpl; auto.
-  rewrite H. decEq. apply Int.shru_rolm. exact H.
-Qed.*)
+  intros; destruct x; simpl; auto.
+
+  assert (Hident: val_shift_int_mask n = n).
+  { apply mask_size_val_ident; exact H. }
+  rewrite Hident. decEq. apply Int.shru_rolm. exact H.
+Qed.
 
 Theorem shrlu_rolml:
   forall x n,
