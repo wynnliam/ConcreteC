@@ -790,13 +790,15 @@ Qed.
 
 Lemma make_shl_correct: shift_constructor_correct make_shl sem_shl.
 Proof.
-  Admitted.
-(*  red; unfold make_shl, sem_shl, sem_shift;
+  red; unfold make_shl, sem_shl, sem_shift;
   intros until m; intros SEM MAKE EV1 EV2;
   destruct (classify_shift tya tyb); inv MAKE;
   destruct va; try discriminate; destruct vb; try discriminate.
-- destruct (Int.ltu i0 Int.iwordsize) eqn:E; inv SEM.
-  econstructor; eauto. simpl; rewrite E; auto.
+- destruct (Int.ltu i0 Int.iwordsize) eqn:E.
+  + inv SEM. econstructor; eauto.
+  + inv SEM. econstructor; eauto.
+  Admitted.
+(* TODO: Define new semantics for Int64 case.
 - destruct (Int64.ltu i0 Int64.iwordsize) eqn:E; inv SEM.
   exploit small_shift_amount_1; eauto. intros [A B].
   econstructor; eauto with cshm. simpl. rewrite A.
