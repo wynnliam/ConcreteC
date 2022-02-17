@@ -1700,6 +1700,17 @@ Proof.
   discriminate.
 Qed.
 
+(*Lemma ltu_transitvity:
+  forall x y z,
+  ltu x y = true ->
+  ltu y z = true ->
+  ltu x z = true.
+Proof.
+  Search ltu_inv.
+  unfold ltu; intros.
+  destruct (zlt (unsigned x) (unsigned z)).
+  rewrite <- H; symmetry.*)
+
 Lemma ltu_iwordsize_inv:
   forall x, ltu x iwordsize = true -> 0 <= unsigned x < zwordsize.
 Proof.

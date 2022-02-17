@@ -474,6 +474,7 @@ Definition shru (v1 v2: val): val :=
   | _, _ => Vundef
   end.
 
+(* TODO: the bad thing *)
 Definition shr_carry (v1 v2: val): val :=
   match v1, v2 with
   | Vint n1, Vint n2 => Vint (Int.shr_carry n1 (val_shift_int_mask n2))
@@ -766,10 +767,13 @@ Definition xorl (v1 v2: val): val :=
 Definition val_shift_lng_mask (v : int) : int :=
   Int.and v (Int.repr 63).
 
+Compute Int64.zwordsize.
+
 (* TODO: Move to Int to make this general across Cop.v and here *)
 Theorem lng_mask_size_val_ident:
 forall v : int,
-Int.ltu v Int64.iwordsize' = true -> val_shift_lng_mask v = v.
+(*Int.ltu v Int64.iwordsize' = true -> val_shift_lng_mask v = v.*)
+(Int.unsigned v) < Int64.zwordsize -> val_shift_lng_mask v = v.
 Proof. Admitted.
 
 Definition shll (v1 v2: val): val :=
@@ -1325,11 +1329,17 @@ Theorem divs_pow2:
   divs x (Vint n) = Some y ->
   shrx x (Vint logn) = Some y.
 Proof.
-  intros; destruct x; simpl in H1; inv H1.
+  Admitted.
+(*  intros; destruct x; simpl in H1; inv H1.
   destruct (Int.eq n Int.zero
          || Int.eq i (Int.repr Int.min_signed) && Int.eq n Int.mone); inv H3.
-  simpl. rewrite H0. decEq. decEq. symmetry. apply Int.divs_pow2. auto.
-Qed.
+  simpl.
+
+  apply Int.ltu_inv in H0.
+  assert (H32: 31 < 32. ltu_inv => logn < 31 
+
+rewrite H0. decEq. decEq. symmetry. apply Int.divs_pow2. auto.
+Qed.*)
 
 Theorem divs_one:
   forall s , divs (Vint s) (Vint Int.one) = Some (Vint s).
@@ -1497,7 +1507,20 @@ Theorem shrx_carry:
   add (shr x y) (shr_carry x y) = z.
 Proof.
   Admitted.
-  (*intros. destruct x; destruct y; simpl in H; inv H.
+  (* XXX: Not provable. The mask breaks shrx semantics.
+  intros.
+  destruct x; destruct y; simpl in H; inv H.
+
+  assert (Hmi0: Int.ltu (val_shift_int_mask i0) (Int.repr 31) = true).
+  { unfold val_shift_int_mask.
+
+  destruct (Int.ltu i0 (Int.repr 31)) eqn:?; inv H1.
+  exploit Int.ltu_inv; eauto. change (Int.unsigned (Int.repr 31)) with 31. intros.
+  assert (Int.ltu i0 Int.iwordsize = true).
+    unfold Int.ltu. apply zlt_true. change (Int.unsigned Int.iwordsize) with 32. lia.
+  simpl. rewrite H0. simpl. decEq. rewrite Int.shrx_carry; auto.
+
+  intros. destruct x; destruct y; simpl in H; inv H.
   destruct (Int.ltu i0 (Int.repr 31)) eqn:?.
 
   exploit Int.ltu_inv; eauto. change (Int.unsigned (Int.repr 31)) with 31. intros.
