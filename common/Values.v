@@ -763,12 +763,18 @@ Definition xorl (v1 v2: val): val :=
   | _, _ => Vundef
   end.
 
+Definition val_shift_lng_mask (v : int) : int :=
+  Int.and v (Int.repr 63).
+
+(* TODO: Move to Int to make this general across Cop.v and here *)
+Theorem lng_mask_size_val_ident:
+forall v : int,
+Int.ltu v Int64.iwordsize' = true -> val_shift_lng_mask v = v.
+Proof. Admitted.
+
 Definition shll (v1 v2: val): val :=
   match v1, v2 with
-  | Vlong n1, Vint n2 =>
-     if Int.ltu n2 Int64.iwordsize'
-     then Vlong(Int64.shl' n1 n2)
-     else Vundef
+  | Vlong n1, Vint n2 => Vlong(Int64.shl' n1 (val_shift_lng_mask n2))
   | _, _ => Vundef
   end.
 
