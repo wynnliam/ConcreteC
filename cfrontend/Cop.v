@@ -909,6 +909,12 @@ Proof.
   apply Int.repr_unsigned.
 Qed.
 
+Theorem sem_mask_ident_lng:
+  forall amt,
+  Int64.ltu amt Int64.iwordsize = true ->
+  sem_mask_lng amt = amt.
+Proof. Admitted.
+
   (*assert (Hwordsz32: Int.iwordsize = Int.repr 32).
   { auto. }
   assert (Hwordsz64 : Int64.iwordsize = Int64.repr 64).
