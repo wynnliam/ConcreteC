@@ -545,11 +545,9 @@ Next Obligation.
   red. inv H; simpl; auto. inv H0; auto. destruct Int64.eq; auto.
 Qed.
 Next Obligation.
-  red. destruct v1; simpl; auto. destruct v2; auto. destruct Int.ltu; auto.
-Qed.
+  red. destruct v1; simpl; auto. destruct v2; auto. Qed.
 Next Obligation.
-  inv H; simpl; auto. inv H0; auto. destruct Int.ltu; auto.
-Qed.
+  inv H; simpl; auto. inv H0; auto. Qed.
 Next Obligation.
   red. destruct v1; simpl; auto. destruct v2; auto. destruct Int.ltu; auto.
 Qed.
