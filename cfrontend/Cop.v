@@ -865,9 +865,9 @@ Definition classify_shift (ty1: type) (ty2: type) :=
   | _,_  => shift_default
   end.
 
-Definition sem_mask_int (v : int) : int := Int.and v (Int.repr 31).
 Definition sem_mask_lng (v : int64) : int64 := Int64.and v (Int64.repr 63).
 
+Definition sem_mask_int (v : int) : int := Int.and v (Int.repr 31).
 Theorem sem_mask_ident:
   forall amt,
   Int.ltu amt Int.iwordsize = true ->

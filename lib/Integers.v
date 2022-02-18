@@ -1700,17 +1700,6 @@ Proof.
   discriminate.
 Qed.
 
-(*Lemma ltu_transitvity:
-  forall x y z,
-  ltu x y = true ->
-  ltu y z = true ->
-  ltu x z = true.
-Proof.
-  Search ltu_inv.
-  unfold ltu; intros.
-  destruct (zlt (unsigned x) (unsigned z)).
-  rewrite <- H; symmetry.*)
-
 Lemma ltu_iwordsize_inv:
   forall x, ltu x iwordsize = true -> 0 <= unsigned x < zwordsize.
 Proof.
@@ -3529,6 +3518,44 @@ Module Int := Make(Wordsize_32).
 Strategy 0 [Wordsize_32.wordsize].
 
 Notation int := Int.int.
+
+Definition sem_mask_int (v : int) : int := Int.and v (Int.repr 31).
+
+Theorem sem_mask_ident_int:
+  forall amt,
+  Int.ltu amt Int.iwordsize = true ->
+  sem_mask_int amt = amt.
+Proof.
+  intros.
+  remember (Int.repr 32) as n.
+  unfold sem_mask_int.
+
+  assert (H32minusOne: Int.sub n (Int.repr 1) = (Int.repr 31)).
+  { rewrite Heqn. simpl. auto. }
+  rewrite <- H32minusOne.
+
+  assert (Hmodu : Int.modu amt n = Int.and amt (Int.sub n (Int.repr 1))).
+  { apply Int.modu_and with (logn:= Int.repr 5).
+    rewrite Heqn. auto. }
+
+  rewrite <- Hmodu.
+
+  assert (Hltu : 0 <= (Int.unsigned amt) < (Int.unsigned Int.iwordsize)).
+  { apply Int.ltu_inv.
+    apply H. }
+
+  assert (Hn: Int.iwordsize = n).
+  { rewrite Heqn. auto. }
+
+  unfold Int.modu.
+  assert (Hmodident: (Int.unsigned amt) mod (Int.unsigned n) = (Int.unsigned amt)).
+  { apply Z.mod_small.
+    rewrite <- Hn.
+    apply Hltu. }
+
+  rewrite -> Hmodident.
+  apply Int.repr_unsigned.
+Qed.
 
 Remark int_wordsize_divides_modulus:
   Z.divide (Z.of_nat Int.wordsize) Int.modulus.
