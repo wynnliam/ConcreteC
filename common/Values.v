@@ -418,32 +418,32 @@ Definition xor (v1 v2: val): val :=
 
 Definition shl (v1 v2: val): val :=
   match v1, v2 with
-  | Vint n1, Vint n2 => Vint(Int.shl n1 (val_shift_int_mask n2))
+  | Vint n1, Vint n2 => Vint(Int.shl n1 (sem_mask_int n2))
   | _, _ => Vundef
   end.
 
 Definition shr (v1 v2: val): val :=
   match v1, v2 with
-  | Vint n1, Vint n2 => Vint(Int.shr n1 (val_shift_int_mask n2))
+  | Vint n1, Vint n2 => Vint(Int.shr n1 (sem_mask_int n2))
   | _, _ => Vundef
   end.
 
 Definition shru (v1 v2: val): val :=
   match v1, v2 with
-  | Vint n1, Vint n2 => Vint(Int.shru n1 (val_shift_int_mask n2))
+  | Vint n1, Vint n2 => Vint(Int.shru n1 (sem_mask_int n2))
   | _, _ => Vundef
   end.
 
 (* TODO: the bad thing *)
 Definition shr_carry (v1 v2: val): val :=
   match v1, v2 with
-  | Vint n1, Vint n2 => Vint (Int.shr_carry n1 (val_shift_int_mask n2))
+  | Vint n1, Vint n2 => Vint (Int.shr_carry n1 (sem_mask_int n2))
   | _, _ => Vundef
   end.
 
 Definition shrx (v1 v2: val): option val :=
   match v1, v2 with
-  | Vint n1, Vint n2 => Some (Vint (Int.shrx n1 (val_shift_int_mask n2)))
+  | Vint n1, Vint n2 => Some (Vint (Int.shrx n1 (sem_mask_int n2)))
   | _, _ => None
   end.
 
@@ -726,8 +726,6 @@ Definition xorl (v1 v2: val): val :=
 
 Definition val_shift_lng_mask (v : int) : int :=
   Int.and v (Int.repr 63).
-
-Compute Int64.zwordsize.
 
 (* TODO: Move to Int to make this general across Cop.v and here *)
 Theorem lng_mask_size_val_ident:
@@ -1231,8 +1229,8 @@ Proof.
   assert (Hltu: Int.ltu logn Int.iwordsize = true).
   { apply Int.is_power2_range with (n := n). apply H. }
 
-  assert (Hident : val_shift_int_mask logn = logn).
-  { apply mask_size_val_ident. apply Hltu. }
+  assert (Hident : sem_mask_int logn = logn).
+  { apply sem_mask_ident_int. apply Hltu. }
   rewrite Hident.
   decEq.
   apply Int.mul_pow2.
@@ -1326,10 +1324,9 @@ Proof.
     simpl.
     decEq.
     symmetry.
-    Check Int.divu_pow2.
     apply Int.divu_pow2.
-    assert (Hident: val_shift_int_mask logn = logn).
-    { apply mask_size_val_ident. apply H0. }
+    assert (Hident: sem_mask_int logn = logn).
+    { apply sem_mask_ident_int. apply H0. }
     rewrite Hident. apply H.
 Qed.
 
@@ -1404,7 +1401,7 @@ Qed.
 Theorem shl_mul: forall x y, mul x (shl Vone y) = shl x y.
 Proof.
   destruct x; destruct y; simpl; auto.
-  remember (val_shift_int_mask i0) as n.
+  remember (sem_mask_int i0) as n.
   case (Int.ltu i0 Int.iwordsize).
   - auto. decEq. symmetry. apply Int.shl_mul.
   - auto. decEq. symmetry. apply Int.shl_mul.
@@ -1418,8 +1415,8 @@ Proof.
   intros; destruct x; simpl; auto.
   decEq.
 
-  assert (Hident: val_shift_int_mask n = n).
-  { apply mask_size_val_ident. apply H. }
+  assert (Hident: sem_mask_int n = n).
+  { apply sem_mask_ident_int. apply H. }
 
   rewrite Hident.
   apply Int.shl_rolm.
@@ -1444,8 +1441,8 @@ Theorem shru_rolm:
 Proof.
   intros; destruct x; simpl; auto.
 
-  assert (Hident: val_shift_int_mask n = n).
-  { apply mask_size_val_ident; exact H. }
+  assert (Hident: sem_mask_int n = n).
+  { apply sem_mask_ident_int; exact H. }
   rewrite Hident. decEq. apply Int.shru_rolm. exact H.
 Qed.
 
