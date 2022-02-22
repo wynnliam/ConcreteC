@@ -4683,6 +4683,14 @@ Proof.
   generalize (Int.unsigned_range_2 y). intros. lia.
 Qed.
 
+Definition shift_mask_long (v : int) : int := Int64.and v (Int64.repr 63).
+
+Theorem sem_mask_ident_int:
+forall v : int,
+(*Int.ltu v Int64.iwordsize' = true -> val_shift_lng_mask v = v.*)
+(Int64.unsigned v) < Int64.zwordsize -> shift_mask_long v = v.
+Proof. Admitted.
+
 End Int64.
 
 Strategy 0 [Wordsize_64.wordsize].
