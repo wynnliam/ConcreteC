@@ -788,6 +788,12 @@ Proof.
   apply Int64.unsigned_repr. comput Int64.max_unsigned; lia.
 Qed.
 
+(* Lemma mask_loword:
+  forall i0,
+  Int64.shift_mask_long (Int64.loword i0) = Int64.shift_mask_long i0. *)
+
+Check sem_mask_lng.
+
 Lemma make_shl_correct: shift_constructor_correct make_shl sem_shl.
 Proof.
   red; unfold make_shl, sem_shl, sem_shift;
@@ -808,14 +814,8 @@ Proof.
   + apply eval_Eunop with (v1 := (Vlong i0)) (v := Vint (Int64.loword i0)).
     -- apply EV2.
     -- simpl. reflexivity.
-  + simpl. Admitted. (* unfold sem_mask_lng.
-
-Check eval_Eunop. Check eval_unop.
-  assert (Hunop: eval_expr ge e le m (Eunop Ointoflong b) n).
-
-apply eval_Ebinop with (v1 := (Vlong i)) (v2 := (Vlong i0)).
-  + apply EV1.
-  + 
+  + simpl. Admitted.
+(* 
 - destruct (Int64.ltu i0 (Int64.repr 32)) eqn:E; inv SEM.
   econstructor; eauto with cshm. simpl. rewrite small_shift_amount_2; auto.
 - destruct (Int.ltu i0 Int64.iwordsize') eqn:E; inv SEM.
