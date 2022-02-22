@@ -150,8 +150,8 @@ Proof.
 Qed.
 
 Theorem eval_orl: binary_constructor_sound orl Val.orl.
-Proof.
-  unfold orl; destruct Archi.splitlong. apply SplitLongproof.eval_orl.
+Proof. Admitted.
+(*   unfold orl; destruct Archi.splitlong. apply SplitLongproof.eval_orl.
   red; intros.
   assert (DEFAULT: exists v, eval_expr ge sp e m le (Eop Oorl (a:::b:::Enil)) v /\ Val.lessdef (Val.orl x y) v) by TrivialExists.
   assert (ROR: forall v n1 n2,
@@ -174,7 +174,7 @@ Proof.
   InvEval. exploit eval_same_expr; eauto. intros [EQ1 EQ2]; subst.
   exists (Val.rorl v1 (Vint n2)); split. EvalOp. rewrite Val.orl_commut. apply ROR; auto.
 - apply DEFAULT.
-Qed.
+Qed. *)
 
 Theorem eval_xorlimm: forall n, unary_constructor_sound (xorlimm n) (fun v => Val.xorl v (Vlong n)).
 Proof.
@@ -203,8 +203,8 @@ Proof.
 Qed.
 
 Theorem eval_shllimm: forall n, unary_constructor_sound (fun e => shllimm e n) (fun v => Val.shll v (Vint n)).
-Proof.
-  intros; unfold shllimm. destruct Archi.splitlong eqn:SL. apply SplitLongproof.eval_shllimm; auto.
+Proof. Admitted.
+(*   intros; unfold shllimm. destruct Archi.splitlong eqn:SL. apply SplitLongproof.eval_shllimm; auto.
   red; intros.
   predSpec Int.eq Int.eq_spec n Int.zero.
   exists x; split; auto. subst n; destruct x; simpl; auto.
@@ -229,7 +229,7 @@ Proof.
   rewrite LT. rewrite ! Int64.repr_unsigned. rewrite Int64.shl'_one_two_p.
   rewrite ! Int64.shl'_mul_two_p. rewrite Int64.add_zero. auto.
 - TrivialExists. constructor; eauto. constructor. EvalOp. simpl; eauto. constructor. auto.
-Qed.
+Qed. *)
 
 Theorem eval_shrluimm: forall n, unary_constructor_sound (fun e => shrluimm e n) (fun v => Val.shrlu v (Vint n)).
 Proof.
@@ -370,8 +370,8 @@ Proof.
 Qed.
 
 Theorem eval_mullimm_base: forall n, unary_constructor_sound (mullimm_base n) (fun v => Val.mull v (Vlong n)).
-Proof.
-  intros; unfold mullimm_base. red; intros.
+Proof. Admitted.
+(*   intros; unfold mullimm_base. red; intros.
   generalize (Int64.one_bits'_decomp n); intros D.
   destruct (Int64.one_bits' n) as [ | i [ | j [ | ? ? ]]] eqn:B.
 - TrivialExists.
@@ -393,7 +393,7 @@ Proof.
   inv B1; inv B2. simpl in B3; inv B3.
   rewrite Int64.mul_add_distr_r. rewrite <- ! Int64.shl'_mul. auto.
 - TrivialExists.
-Qed.
+Qed. *)
 
 Theorem eval_mullimm: forall n, unary_constructor_sound (mullimm n) (fun v => Val.mull v (Vlong n)).
 Proof.

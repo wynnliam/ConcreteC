@@ -786,7 +786,8 @@ Qed.
 Lemma eval_mullimm:
   forall n, unary_constructor_sound (mullimm n) (fun v => Val.mull v (Vlong n)).
 Proof.
-  unfold mullimm; red; intros.
+Admitted.
+(*   unfold mullimm; red; intros.
   predSpec Int64.eq Int64.eq_spec n Int64.zero.
   subst n. econstructor; split. apply eval_longconst.
   destruct x; simpl; auto. rewrite Int64.mul_zero. auto.
@@ -801,11 +802,12 @@ Proof.
   simpl in B. erewrite Int64.is_power2'_range in B by eauto.
   exact B.
   apply eval_mull_base; auto. apply eval_longconst.
-Qed.
+Qed. *)
 
 Theorem eval_mull: binary_constructor_sound mull Val.mull.
 Proof.
-  unfold mull; red; intros.
+  Admitted.
+(*   unfold mull; red; intros.
   destruct (is_longconst a) as [p|] eqn:LC1;
   destruct (is_longconst b) as [q|] eqn:LC2.
 - exploit (is_longconst_sound le a); eauto. intros EQ; subst x.
@@ -818,7 +820,7 @@ Proof.
 - exploit (is_longconst_sound le b); eauto. intros EQ; subst y.
   eapply eval_mullimm; eauto.
 - apply eval_mull_base; auto.
-Qed.
+Qed. *)
 
 Theorem eval_mullhu:
   forall n, unary_constructor_sound (fun a => mullhu a n) (fun v => Val.mullhu v (Vlong n)).

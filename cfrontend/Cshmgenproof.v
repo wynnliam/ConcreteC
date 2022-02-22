@@ -789,8 +789,8 @@ Proof.
 Qed.
 
 Lemma make_shl_correct: shift_constructor_correct make_shl sem_shl.
-Proof. Admitted.
-(*  red; unfold make_shl, sem_shl, sem_shift;
+Proof.
+  red; unfold make_shl, sem_shl, sem_shift;
   intros until m; intros SEM MAKE EV1 EV2;
   destruct (classify_shift tya tyb); inv MAKE;
   destruct va; try discriminate; destruct vb; try discriminate.
@@ -801,27 +801,27 @@ Proof. Admitted.
     -- apply EV2.
     -- simpl. apply SEM.
 
-- Compute Int64.iwordsize'.
+- remember (Vint (Int64.loword i0)) as n.
+  assert (Hunop: eval_unop Ointoflong (Vlong i0) = Some n).
+  { simpl. rewrite Heqn. reflexivity. }
+  inv SEM. econstructor; eauto.
+  + apply eval_Eunop with (v1 := (Vlong i0)) (v := Vint (Int64.loword i0)).
+    -- apply EV2.
+    -- simpl. reflexivity.
+  + simpl. Admitted. (* unfold sem_mask_lng.
 
-unfold eval_expr.
+Check eval_Eunop. Check eval_unop.
+  assert (Hunop: eval_expr ge e le m (Eunop Ointoflong b) n).
 
-destruct (Int64.ltu i0 Int64.iwordsize) eqn:E; inv SEM.
-  + exploit small_shift_amount_1; eauto. intros [A B].
-    econstructor; eauto with cshm. simpl. rewrite A.
-    f_equal; f_equal.
-    assert (Hident: sem_mask_lng i0 = i0).
-    { apply sem_mask_ident_lng. apply E. }
-    rewrite Hident.
-    unfold Int64.shl', Int64.shl. rewrite B; auto.
-  + Check Eunop Ointoflong b.
-
-
+apply eval_Ebinop with (v1 := (Vlong i)) (v2 := (Vlong i0)).
+  + apply EV1.
+  + 
 - destruct (Int64.ltu i0 (Int64.repr 32)) eqn:E; inv SEM.
   econstructor; eauto with cshm. simpl. rewrite small_shift_amount_2; auto.
 - destruct (Int.ltu i0 Int64.iwordsize') eqn:E; inv SEM.
   econstructor; eauto with cshm. simpl. rewrite E.
   unfold Int64.shl', Int64.shl. rewrite small_shift_amount_3; auto.
-Qed.*)
+Qed. *)
 
 Lemma make_shr_correct: shift_constructor_correct make_shr sem_shr.
 Proof.

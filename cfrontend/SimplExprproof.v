@@ -168,7 +168,7 @@ Proof.
   unfold sem_binary_operation, sem_shr, sem_shift.
   simpl.
   assert (SMI: sem_mask_int amount = amount).
-  { apply Cop.sem_mask_ident. apply LT. }
+  { apply sem_mask_ident_int. apply LT. }
   rewrite -> SMI. reflexivity.
 Qed.
 

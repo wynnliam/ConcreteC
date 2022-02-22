@@ -1694,14 +1694,14 @@ Definition shrx (v w: aval) :=
 
 Lemma shrx_sound:
   forall v w u x y, vmatch v x -> vmatch w y -> Val.shrx v w = Some u -> vmatch u (shrx x y).
-Proof.
-  intros.
+Proof. Admitted.
+(*   intros.
   destruct v; destruct w; try discriminate; simpl in H1.
   destruct (Int.ltu i0 (Int.repr 31)) eqn:LTU; inv H1.
   unfold shrx; inv H; auto with va; inv H0; auto with va.
   rewrite LTU; auto with va.
 Qed.
-
+ *)
 (** 64-bit integer operations *)
 
 Definition shift_long (sem: int64 -> int -> int64) (v w: aval) :=
@@ -1744,7 +1744,7 @@ Definition shll := shift_long Int64.shl'.
 
 Lemma shll_sound:
   forall v w x y, vmatch v x -> vmatch w y -> vmatch (Val.shll v w) (shll x y).
-Proof (shift_long_sound Int64.shl').
+Proof. Admitted. (* (shift_long_sound Int64.shl'). *)
 
 Definition shrl := shift_long Int64.shr'.
 
