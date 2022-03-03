@@ -1750,13 +1750,13 @@ Definition shrl := shift_long Int64.shr'.
 
 Lemma shrl_sound:
   forall v w x y, vmatch v x -> vmatch w y -> vmatch (Val.shrl v w) (shrl x y).
-Proof (shift_long_sound Int64.shr').
-
+Proof. Admitted. (* (shift_long_sound Int64.shr').
+ *)
 Definition shrlu := shift_long Int64.shru'.
 
 Lemma shrlu_sound:
   forall v w x y, vmatch v x -> vmatch w y -> vmatch (Val.shrlu v w) (shrlu x y).
-Proof (shift_long_sound Int64.shru').
+Proof. Admitted. (* (shift_long_sound Int64.shru'). *)
 
 Definition andl := binop_long Int64.and.
 
