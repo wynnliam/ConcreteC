@@ -4691,6 +4691,30 @@ forall v : Int.int,
 (Int.unsigned v) < Int64.zwordsize -> shift_mask_long v = v.
 Proof. Admitted.
 
+Definition shift_mask_long2 (v : int) : int := and v (repr 63).
+Theorem sem_mask_ident_int2:
+forall v : int,
+(*Int.ltu v Int64.iwordsize' = true -> val_shift_lng_mask v = v.*)
+(unsigned v) < Int64.zwordsize -> shift_mask_long2 v = v.
+Proof. Admitted.
+
+Theorem shift_mask_equiv:
+forall v : int,
+(Int.unsigned (shift_mask_long (loword v))) = (unsigned (shift_mask_long2 v)).
+Proof.
+  intros.
+  rewrite <- int_unsigned_repr.
+  f_equal. unfold shift_mask_long; unfold shift_mask_long2.
+(*
+int_unsigned_repr: forall x :
+Integers.int, unsigned (repr (Int.unsigned x)) =
+Int.unsigned x
+*)
+
+ simpl. Admitted.
+
+
+
 End Int64.
 
 Strategy 0 [Wordsize_64.wordsize].

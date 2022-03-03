@@ -724,8 +724,6 @@ Definition xorl (v1 v2: val): val :=
   | _, _ => Vundef
   end.
 
-Check Int64.shl'.
-
 Definition shll (v1 v2: val): val :=
   match v1, v2 with
   | Vlong n1, Vint n2 => Vlong(Int64.shl' n1 (Int64.shift_mask_long n2))

@@ -788,12 +788,6 @@ Proof.
   apply Int64.unsigned_repr. comput Int64.max_unsigned; lia.
 Qed.
 
-(* Lemma mask_loword:
-  forall i0,
-  Int64.shift_mask_long (Int64.loword i0) = Int64.shift_mask_long i0. *)
-
-Check sem_mask_lng.
-
 Lemma make_shl_correct: shift_constructor_correct make_shl sem_shl.
 Proof.
   red; unfold make_shl, sem_shl, sem_shift;
@@ -807,30 +801,70 @@ Proof.
     -- apply EV2.
     -- simpl. apply SEM.
 
-- remember (Vint (Int64.loword i0)) as n.
-  assert (Hunop: eval_unop Ointoflong (Vlong i0) = Some n).
-  { simpl. rewrite Heqn. reflexivity. }
-  inv SEM. econstructor; eauto.
-  + apply eval_Eunop with (v1 := (Vlong i0)) (v := Vint (Int64.loword i0)).
-    -- apply EV2.
-    -- simpl. reflexivity.
-  + simpl. Admitted.
-(* 
-- destruct (Int64.ltu i0 (Int64.repr 32)) eqn:E; inv SEM.
-  econstructor; eauto with cshm. simpl. rewrite small_shift_amount_2; auto.
-- destruct (Int.ltu i0 Int64.iwordsize') eqn:E; inv SEM.
-  econstructor; eauto with cshm. simpl. rewrite E.
-  unfold Int64.shl', Int64.shl. rewrite small_shift_amount_3; auto.
-Qed. *)
+- destruct (Int64.ltu i0 Int64.iwordsize) eqn:E; inv SEM.
+  + exploit small_shift_amount_1; eauto. intros [A B].
+    econstructor; eauto with cshm. simpl.
+    assert (Hsml: Int64.shift_mask_long (Int64.loword i0) = (Int64.loword i0)).
+    { remember (Int64.loword i0) as v. apply Int64.sem_mask_ident_int.
+      unfold Int64.zwordsize. simpl. change 64 with (Int.unsigned Int64.iwordsize').
+      apply Int.ltu_inv. apply A. } rewrite Hsml.
+    assert (Hsml2: Int64.shift_mask_long2 i0 = i0).
+    { Search Int64.shift_mask_long2.
+      apply Int64.sem_mask_ident_int2.
+      unfold Int64.zwordsize. simpl. change 64 with (Int64.unsigned (Int64.repr 64)).
+      apply Int64.ltu_inv. apply E. }
+    rewrite Hsml2. decEq. decEq.
+    unfold Int64.shl'; unfold Int64.shl. rewrite B. reflexivity.
+  + apply eval_Ebinop with (a1 := a) (v1 := (Vlong i)) (a2 := (Eunop Ointoflong b)) (v2 := Vint (Int64.loword i0)).
+    -- apply EV1.
+    -- apply eval_Eunop with (a1 := b) (v1 := (Vlong i0)) (v := Vint (Int64.loword i0)).
+       ++ apply EV2.
+       ++ simpl. reflexivity.
+    -- simpl. repeat f_equal.
+       unfold Int64.shl'; unfold Int64.shl. unfold Int.unsigned. unfold Int64.unsigned.
+       unfold Int.intval. unfold Int.and. unfold Int64.intval. unfold Int64.and.
+       repeat f_equal. Check Int64.shift_mask_equiv. admit.
+
+- admit. (* Will come back to later. *)
+- apply eval_Ebinop with (v1 := (Vlong i)) (v2 := (Vint i0)).
+  + apply EV1.
+  + apply EV2.
+  + inv SEM. simpl. repeat f_equal. admit. (* Something's fishy about these formulas... *)
+Admitted.
 
 Lemma make_shr_correct: shift_constructor_correct make_shr sem_shr.
 Proof.
-  Admitted.
-(*  red; unfold make_shr, sem_shr, sem_shift;
+  red; unfold make_shr, sem_shr, sem_shift;
   intros until m; intros SEM MAKE EV1 EV2;
   destruct (classify_shift tya tyb); inv MAKE;
   destruct va; try discriminate; destruct vb; try discriminate.
-- destruct (Int.ltu i0 Int.iwordsize) eqn:E; inv SEM.
+  - destruct s; inv SEM; inv H0; apply eval_Ebinop with (v1 := (Vint i)) (v2 := (Vint i0)).
+    apply EV1. apply EV2. reflexivity.
+    apply EV1. apply EV2. reflexivity.
+  - destruct s.
+    + inv H0; inv SEM. admit.
+    + inv H0; inv SEM. admit.
+  - inv SEM. destruct s.
+    + inv H0. apply eval_Ebinop with (v1 := (Vint i)) (v2 := (Vint (Int64.loword i0))). 
+      -- apply EV1.
+      -- apply eval_Eunop with (a1 := b) (v1 := (Vlong i0)).
+         ++ apply EV2.
+         ++ reflexivity.
+      -- simpl. reflexivity.
+    + inv H0. apply eval_Ebinop with (v1 := (Vint i)) (v2 := (Vint (Int64.loword i0))). 
+      -- apply EV1.
+      -- apply eval_Eunop with (a1 := b) (v1 := (Vlong i0)).
+         ++ apply EV2.
+         ++ reflexivity.
+      -- simpl. reflexivity.
+  - inv SEM. destruct s.
+    + inv H0. apply eval_Ebinop with (v1 := (Vlong i)) (v2 := (Vint i0)).
+      -- apply EV1.
+      -- apply EV2.
+      -- simpl. admit. (* TODO: Update Values::shrl semantics *)
+Admitted.
+
+(*- destruct (Int.ltu i0 Int.iwordsize) eqn:E; inv SEM.
   destruct s; inv H0; econstructor; eauto; simpl; rewrite E; auto.
 - destruct (Int64.ltu i0 Int64.iwordsize) eqn:E; inv SEM.
   exploit small_shift_amount_1; eauto. intros [A B].

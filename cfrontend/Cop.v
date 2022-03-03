@@ -865,25 +865,6 @@ Definition classify_shift (ty1: type) (ty2: type) :=
   | _,_  => shift_default
   end.
 
-(* TODO: Move to Integers.v *)
-Definition sem_mask_lng (v : int64) : int64 := Int64.and v (Int64.repr 63).
-Theorem sem_mask_ident_lng:
-  forall amt,
-  Int64.ltu amt Int64.iwordsize = true ->
-  sem_mask_lng amt = amt.
-Proof. Admitted.
-
-  (*assert (Hwordsz32: Int.iwordsize = Int.repr 32).
-  { auto. }
-  assert (Hwordsz64 : Int64.iwordsize = Int64.repr 64).
-  { auto. }
-  assert (Hwordsz64' : Int64.iwordsize' = Int.repr 64).
-  { auto. }
-
-  Compute Int64.iwordsize'.
-  Admitted.*)
-
-
 Definition sem_shift
     (sem_int: signedness -> int -> int -> int)
     (sem_long: signedness -> int64 -> int64 -> int64)
@@ -901,12 +882,12 @@ Definition sem_shift
       end
   | shift_case_li sg =>
       match v1, v2 with
-      | Vlong n1, Vint n2 => Some(Vlong(sem_long sg n1 (sem_mask_lng (Int64.repr (Int.unsigned n2)))))
+      | Vlong n1, Vint n2 => Some(Vlong(sem_long sg n1 (Int64.shift_mask_long2 (Int64.repr (Int.unsigned n2)))))
       | _, _ => None
       end
   | shift_case_ll sg =>
       match v1, v2 with
-      | Vlong n1, Vlong n2 => Some(Vlong(sem_long sg n1 (sem_mask_lng n2)))
+      | Vlong n1, Vlong n2 => Some(Vlong(sem_long sg n1 (Int64.shift_mask_long2 n2)))
       | _, _ => None
       end
   | shift_default => None
