@@ -1333,8 +1333,7 @@ Lemma eval_binop_compat:
      eval_binop op tv1 tv2 tm = Some tv
   /\ Val.inject f v tv.
 Proof.
-  Admitted.
-  (*destruct op; simpl; intros; inv H.
+  destruct op; simpl; intros; inv H.
 - TrivialExists. apply Val.add_inject; auto.
 - TrivialExists. apply Val.sub_inject; auto.
 - TrivialExists. inv H0; inv H1; constructor.
@@ -1352,11 +1351,8 @@ Proof.
 - TrivialExists; inv H0; inv H1; constructor.
 - TrivialExists; inv H0; inv H1; constructor.
 - TrivialExists; inv H0; inv H1; simpl; auto.
-  destruct (Int.ltu i0 Int.iwordsize); constructor.
 - TrivialExists; inv H0; inv H1; simpl; auto.
-  destruct (Int.ltu i0 Int.iwordsize); constructor.
 - TrivialExists; inv H0; inv H1; simpl; auto.
-  destruct (Int.ltu i0 Int.iwordsize); constructor.
 - TrivialExists; inv H0; inv H1; constructor.
 - TrivialExists; inv H0; inv H1; constructor.
 - TrivialExists; inv H0; inv H1; constructor.
@@ -1382,11 +1378,8 @@ Proof.
 - TrivialExists; inv H0; inv H1; constructor.
 - TrivialExists; inv H0; inv H1; constructor.
 - TrivialExists; inv H0; inv H1; simpl; auto.
-  destruct (Int.ltu i0 Int64.iwordsize'); constructor.
 - TrivialExists; inv H0; inv H1; simpl; auto.
-  destruct (Int.ltu i0 Int64.iwordsize'); constructor.
 - TrivialExists; inv H0; inv H1; simpl; auto.
-  destruct (Int.ltu i0 Int64.iwordsize'); constructor.
 - (* cmp *)
   TrivialExists. inv H0; inv H1; auto. apply val_inject_val_of_optbool.
 - (* cmpu *)
@@ -1419,7 +1412,7 @@ Proof.
   intros; eapply Mem.weak_valid_pointer_inject_no_overflow; eauto.
   intros; eapply Mem.different_pointers_inject; eauto.
   discriminate.
-Qed.*)
+Qed.
 
 (** * Correctness of Cminor construction functions *)
 
