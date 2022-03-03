@@ -991,8 +991,7 @@ Lemma make_load_correct:
   deref_loc ty m b ofs bf v ->
   eval_expr ge e le m code v.
 Proof.
-  Admitted.
-(*  unfold make_load; intros until m; intros MKLOAD EVEXP DEREF.
+  unfold make_load; intros until m; intros MKLOAD EVEXP DEREF.
   inv DEREF.
 - (* scalar *)
   rewrite H in MKLOAD. inv MKLOAD. apply eval_Eload with (Vptr b ofs); auto.
@@ -1012,15 +1011,15 @@ Proof.
   set (e2 := Ebinop Oshl e1 (make_intconst amount1)).
   assert (E2: eval_expr ge e le m e2 (Vint (Int.shl c amount1))).
   { econstructor; eauto using make_intconst_correct. cbn.
-    unfold amount1 at 1; rewrite int_ltu_true by lia. auto. } 
+    admit. } 
   econstructor; eauto using make_intconst_correct.
   destruct (Ctypes.intsize_eq sz IBool || Ctypes.signedness_eq sg Unsigned); cbn.
-  + unfold amount2 at 1; rewrite int_ltu_true by lia. 
-    rewrite Int.unsigned_bitfield_extract_by_shifts by lia. auto.
-  + unfold amount2 at 1; rewrite int_ltu_true by lia. 
+  + admit. (* unfold amount2 at 1; rewrite int_ltu_true by lia. 
+    rewrite Int.unsigned_bitfield_extract_by_shifts by lia. auto. *)
+  + admit. Admitted. (* unfold amount2 at 1; rewrite int_ltu_true by lia. 
     rewrite Int.signed_bitfield_extract_by_shifts by lia. auto.
-Qed.*)
-
+Qed.
+ *)
 Lemma make_store_bitfield_correct: 
   forall f sz sg pos width dst src ty k e le m b ofs v m' s,
   eval_expr ge e le m dst (Vptr b ofs) ->
