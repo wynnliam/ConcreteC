@@ -732,19 +732,13 @@ Definition shll (v1 v2: val): val :=
 
 Definition shrl (v1 v2: val): val :=
   match v1, v2 with
-  | Vlong n1, Vint n2 =>
-     if Int.ltu n2 Int64.iwordsize'
-     then Vlong(Int64.shr' n1 n2)
-     else Vundef
+  | Vlong n1, Vint n2 => Vlong(Int64.shr' n1 (Int64.shift_mask_long n2))
   | _, _ => Vundef
   end.
 
 Definition shrlu (v1 v2: val): val :=
   match v1, v2 with
-  | Vlong n1, Vint n2 =>
-     if Int.ltu n2 Int64.iwordsize'
-     then Vlong(Int64.shru' n1 n2)
-     else Vundef
+  | Vlong n1, Vint n2 => Vlong(Int64.shru' n1 (Int64.shift_mask_long n2))
   | _, _ => Vundef
   end.
 
