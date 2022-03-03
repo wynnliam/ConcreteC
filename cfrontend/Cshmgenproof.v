@@ -861,24 +861,12 @@ Proof.
     + inv H0. apply eval_Ebinop with (v1 := (Vlong i)) (v2 := (Vint i0)).
       -- apply EV1.
       -- apply EV2.
-      -- simpl. admit. (* TODO: Update Values::shrl semantics *)
+      -- simpl. repeat f_equal. admit.
+    + inv H0. apply eval_Ebinop with (v1 := (Vlong i)) (v2 := (Vint i0)).
+      -- apply EV1.
+      -- apply EV2.
+      -- simpl. repeat f_equal. admit.
 Admitted.
-
-(*- destruct (Int.ltu i0 Int.iwordsize) eqn:E; inv SEM.
-  destruct s; inv H0; econstructor; eauto; simpl; rewrite E; auto.
-- destruct (Int64.ltu i0 Int64.iwordsize) eqn:E; inv SEM.
-  exploit small_shift_amount_1; eauto. intros [A B].
-  destruct s; inv H0; econstructor; eauto with cshm; simpl; rewrite A;
-  f_equal; f_equal.
-  unfold Int64.shr', Int64.shr; rewrite B; auto.
-  unfold Int64.shru', Int64.shru; rewrite B; auto.
-- destruct (Int64.ltu i0 (Int64.repr 32)) eqn:E; inv SEM.
-  destruct s; inv H0; econstructor; eauto with cshm; simpl; rewrite small_shift_amount_2; auto.
-- destruct (Int.ltu i0 Int64.iwordsize') eqn:E; inv SEM.
-  destruct s; inv H0; econstructor; eauto with cshm; simpl; rewrite E.
-  unfold Int64.shr', Int64.shr; rewrite small_shift_amount_3; auto.
-  unfold Int64.shru', Int64.shru; rewrite small_shift_amount_3; auto.
-Qed.*)
 
 Lemma make_cmp_ptr_correct:
   forall cmp e le m a va b vb v,
