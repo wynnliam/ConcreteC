@@ -223,22 +223,31 @@ Theorem eval_shlimm:
                                     (fun x => Val.shl x (Vint n)).
 Proof.
   Admitted.
-(*  red; intros until x.  unfold shlimm.
+(*   red; intros until x.  unfold shlimm.
   predSpec Int.eq Int.eq_spec n Int.zero.
   intros; subst. exists x; split; auto. destruct x; simpl; auto. rewrite Int.shl_zero; auto.
   destruct (Int.ltu n Int.iwordsize) eqn:LT; simpl.
   destruct (shlimm_match a); intros; InvEval.
-- exists (Vint (Int.shl n1 n)); split. EvalOp.
-  simpl. rewrite LT. auto.
+- exists (Vint (Int.shl n1 (sem_mask_int n))); split. EvalOp.
+  simpl. auto.
 - destruct (Int.ltu (Int.add n n1) Int.iwordsize) eqn:?.
 + exists (Val.shl v1 (Vint (Int.add n n1))); split. EvalOp.
   destruct v1; simpl; auto.
-  rewrite Heqb.
-  destruct (Int.ltu n1 Int.iwordsize) eqn:?; simpl; auto.
-  destruct (Int.ltu n Int.iwordsize) eqn:?; simpl; auto.
-  rewrite Int.add_commut. rewrite Int.shl_shl; auto. rewrite Int.add_commut; auto.
+  erewrite sem_mask_ident_int with (amt := Int.add n n1) by auto.
+  assert (Hsumltu: Int.ltu n Int.iwordsize = true /\ Int.ltu n1 Int.iwordsize = true).
+  { (* TODO: n and n1 could be negative *)
+    (* unsigned (x + y) < iwordsize =>
+       unsigned (x) < iwordsize /\ unsigned (y) < iwordsize untrue *)
+    Check Int.shl_shl.
+    admit. }
+  destruct Hsumltu.
+  rewrite Int.add_commut.
+  erewrite sem_mask_ident_int with (amt := n) by auto.
+  erewrite sem_mask_ident_int with (amt := n1) by auto.
+  erewrite Int.shl_shl; auto. 
+  rewrite Int.add_commut. auto. 
 + TrivialExists. econstructor. EvalOp. simpl; eauto. constructor.
-  simpl. auto.
+  simpl. admit.
 - destruct (shift_is_scale n).
 + econstructor; split. EvalOp. simpl. eauto.
   rewrite ! Int.repr_unsigned.
@@ -252,7 +261,7 @@ Proof.
 + TrivialExists.
 - intros; TrivialExists. constructor. eauto. constructor. EvalOp. simpl; eauto. constructor.
   auto.
-Qed.*)
+Qed. *)
 
 Theorem eval_shruimm:
   forall n, unary_constructor_sound (fun a => shruimm a n)

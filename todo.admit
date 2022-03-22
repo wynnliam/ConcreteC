@@ -1,0 +1,12 @@
+./common/Values.v:  Admitted.
+./common/Builtins0.v:  Admitted.
+./lib/Integers.v:Proof. Admitted.
+./backend/NeedDomain.v:  Admitted.
+./backend/SplitLongproof.v:  Admitted.
+./backend/SelectDivproof.v:  Admitted.
+./backend/ValueDomain.v:  Admitted.
+./cfrontend/Cshmgenproof.v:Admitted.
+./x86/Op.v:  Admitted.
+./x86/SelectLongproof.v:Proof. Admitted.
+./x86/ConstpropOpproof.v:  Admitted.
+./x86/SelectOpproof.v:  Admitted.

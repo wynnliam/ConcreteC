@@ -845,7 +845,7 @@ Proof.
     + inv H0; inv SEM. admit.
     + inv H0; inv SEM. admit.
   - inv SEM. destruct s.
-    + inv H0. apply eval_Ebinop with (v1 := (Vint i)) (v2 := (Vint (Int64.loword i0))). 
+    + inv H0. apply eval_Ebinop with (v1 := (Vint i)) (v2 := (Vint (Int64.loword i0))).
       -- apply EV1.
       -- apply eval_Eunop with (a1 := b) (v1 := (Vlong i0)).
          ++ apply EV2.
@@ -1014,7 +1014,7 @@ Proof.
     admit. } 
   econstructor; eauto using make_intconst_correct.
   destruct (Ctypes.intsize_eq sz IBool || Ctypes.signedness_eq sg Unsigned); cbn.
-  + admit. (* unfold amount2 at 1; rewrite int_ltu_true by lia. 
+  + unfold amount2. Check int_ltu_true. admit. (* rewrite int_ltu_true by lia. 
     rewrite Int.unsigned_bitfield_extract_by_shifts by lia. auto. *)
   + admit. Admitted. (* unfold amount2 at 1; rewrite int_ltu_true by lia. 
     rewrite Int.signed_bitfield_extract_by_shifts by lia. auto.
